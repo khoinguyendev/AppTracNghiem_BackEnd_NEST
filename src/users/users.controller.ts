@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '@/auth/decorator/roles.decorator';
-import { UserRole } from './entities/user.entity';
+import { UserRole } from '../entities/user.entity';
 
 @Controller('users')
 export class UsersController {

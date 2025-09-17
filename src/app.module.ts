@@ -3,12 +3,18 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { UsersModule } from '@/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@/users/entities/user.entity';
+import { User } from '@/entities/user.entity';
 import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './auth/guard/roles.guard';
+import { RolesGuard } from '@/auth/guard/roles.guard';
 import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
+import { Exam } from '@/entities/exam.entity';
+import { Answer } from '@/entities/answer.entity';
+import { Question } from '@/entities/question.entity';
+import { ExamsModule } from '@/exams/exams.module';
+import { QuestionsModule } from '@/questions/questions.module';
+import { AnswersModule } from '@/answers/answers.module';
 
 @Module({
   imports: [
@@ -17,6 +23,9 @@ import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
     }),
     UsersModule,
     AuthModule,
+    ExamsModule,
+    QuestionsModule,
+    AnswersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -24,7 +33,7 @@ import { JwtAuthGuard } from '@/auth/guard/jwt-auth.guard';
       username: 'root',
       password: '',
       database: 'test',
-      entities: [User],
+      entities: [User,Exam,Answer,Question],
       synchronize: true,
     }),
 
