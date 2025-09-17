@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles } from '@/auth/decorator/roles.decorator';
+import { UserRole } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -12,6 +14,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Roles(UserRole.ADMIN)
   @Get()
   findAll() {
     return this.usersService.findAll();

@@ -8,4 +8,6 @@ export class CreateUserDto {
     @MinLength(6)
     @MaxLength(50)
     password: string;
+    @IsNotEmpty()
+    comparePassword: string;
 }

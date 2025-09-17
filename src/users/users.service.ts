@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from '@/auth/dto/register-user.dto';
@@ -15,7 +15,10 @@ export class UsersService {
   ) { }
 
   async register(registerUserDto: RegisterUserDto) {
-    const { email, password } = registerUserDto;
+    const { email, password,comparePassword } = registerUserDto;
+    if(password!==comparePassword){
+      throw new BadRequestException("Mật khẩu xác nhận không khớp.")
+    }
     const existUser = await this.findByEmail(email);
     if (existUser) {
       throw new ConflictException("Email đã tồn tại.")
