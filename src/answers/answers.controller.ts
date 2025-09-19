@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
 import { AnswersService } from './answers.service';
-import { CreateAnswerDto } from './dto/create-answer.dto';
+import { CreateAnswerDto, ReplaceAnswersDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { Public } from '@/auth/decorator/public.decorator';
 
 @Controller('answers')
 export class AnswersController {
-  constructor(private readonly answersService: AnswersService) {}
+  constructor(private readonly answersService: AnswersService) { }
 
   @Public()
   @Post()
@@ -23,14 +23,21 @@ export class AnswersController {
   findOne(@Param('id') id: string) {
     return this.answersService.findOne(+id);
   }
-
+  @Public()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAnswerDto: UpdateAnswerDto) {
-    return this.answersService.update(+id, updateAnswerDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateAnswerDto: UpdateAnswerDto) {
+    return this.answersService.update(id, updateAnswerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.answersService.remove(+id);
+  }
+
+  @Public()
+  @Put('question-id/:id/replace')
+  async replaceByQuestionId(@Param('id', ParseIntPipe) id: number, @Body() dto: ReplaceAnswersDto,
+  ) {
+    return this.answersService.replaceByQuestionId(id, dto.answers);
   }
 }

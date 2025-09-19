@@ -19,7 +19,7 @@ import { Answer } from '@/entities/answer.entity';
     exam: Exam;
   
     @ManyToOne(() => Question, (question) => question.children, { nullable: true, onDelete: 'CASCADE' })
-    parent: Question;
+    parent: Question| null;
   
     @OneToMany(() => Question, (question) => question.parent)
     children: Question[];
@@ -29,10 +29,10 @@ import { Answer } from '@/entities/answer.entity';
     @Column({ type: 'text' })
     description: string;
     @Column({ length: 50 })
-    type: string; // multiple_choice, fill_blank, multi_answer, matching
+    type: string; // multiple_choice, fill_blank, multi_answer, matching, group
   
-    @Column({nullable: true})
-    orderIndex: number;
+    @Column({ type: 'int',nullable: true})
+    orderIndex: number|null;
   
     @OneToMany(() => Answer, (answer) => answer.question)
     answers: Answer[];

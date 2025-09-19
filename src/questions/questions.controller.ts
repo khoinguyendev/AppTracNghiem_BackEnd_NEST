@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { Public } from '@/auth/decorator/public.decorator';
+import { QuestionQueryDto } from '@/utils/query.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -22,8 +23,9 @@ export class QuestionsController {
 
   @Public()
   @Get('exams/:examId')
-  findByExam(@Param('examId',ParseIntPipe) examId: number) {
-    return this.questionsService.findByExam(examId);
+  findByExam(@Param('examId',ParseIntPipe) examId: number,  @Query() query: QuestionQueryDto,
+) {
+    return this.questionsService.findByExam(examId,query);
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -31,14 +33,15 @@ export class QuestionsController {
   }
 
  
-
+  @Public()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionsService.update(+id, updateQuestionDto);
+  update(@Param('id',ParseIntPipe) id: number, @Body() updateQuestionDto: UpdateQuestionDto) {
+    return this.questionsService.update(id, updateQuestionDto);
   }
 
+  @Public()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  remove(@Param('id',ParseIntPipe) id: number) {
+    return this.questionsService.remove(id);
   }
 }

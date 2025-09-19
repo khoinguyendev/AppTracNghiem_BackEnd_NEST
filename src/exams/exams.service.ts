@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,27 +12,36 @@ export class ExamsService {
     private examsRepository: Repository<Exam>,
   ) { }
   async create(createExamDto: CreateExamDto) {
-    const {title,description}=createExamDto;
-    const exam=this.examsRepository.create({
+    const { title, description } = createExamDto;
+    const exam = this.examsRepository.create({
       title,
       description
     })
     return await this.examsRepository.save(exam);
   }
 
-  findAll() {
-    return `This action returns all exams`;
+  async findAll() {
+    return await this.examsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exam`;
+  async findOne(id: number) {
+    return this.examsRepository.findOneBy({ id });
   }
 
-  update(id: number, updateExamDto: UpdateExamDto) {
-    return `This action updates a #${id} exam`;
+  async update(id: number, updateExamDto: UpdateExamDto) {
+    const exam = await this.findOne(id)
+    if (!exam) {
+      throw new BadRequestException(`Không tìm thấy đề có id là ${id}.`)
+    }
+    const updatedExam = this.examsRepository.merge(exam, updateExamDto);
+    return await this.examsRepository.save(updatedExam);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exam`;
+  async remove(id: number) {
+    const exam = await this.findOne(id)
+    if (!exam) {
+      throw new BadRequestException(`Không tìm thấy đề có id là ${id}.`)
+    }
+    return await this.examsRepository.delete(id);
   }
 }

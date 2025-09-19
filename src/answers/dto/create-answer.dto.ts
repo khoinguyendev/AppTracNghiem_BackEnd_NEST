@@ -1,4 +1,6 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional } from "class-validator";
+import {  AnswerDto } from "@/questions/dto/create-question.dto";
+import { Type } from "class-transformer";
+import { IsArray, IsBoolean, IsInt, IsNotEmpty, IsOptional, ValidateNested } from "class-validator";
 
 export class CreateAnswerDto {
     @IsNotEmpty()
@@ -13,3 +15,10 @@ export class CreateAnswerDto {
     @IsOptional()
     matchKey?: string;
 }
+
+export class ReplaceAnswersDto {
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => AnswerDto)
+    answers: AnswerDto[];
+  }

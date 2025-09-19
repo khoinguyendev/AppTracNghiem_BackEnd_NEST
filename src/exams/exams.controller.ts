@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { ExamsService } from './exams.service';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
@@ -14,6 +14,7 @@ export class ExamsController {
     return this.examsService.create(createExamDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.examsService.findAll();
@@ -24,13 +25,16 @@ export class ExamsController {
     return this.examsService.findOne(+id);
   }
 
+  @Public()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExamDto: UpdateExamDto) {
-    return this.examsService.update(+id, updateExamDto);
+  
+  update(@Param('id',ParseIntPipe) id: number, @Body() updateExamDto: UpdateExamDto) {
+    return this.examsService.update(id, updateExamDto);
   }
 
+  @Public()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.examsService.remove(+id);
+  remove(@Param('id',ParseIntPipe) id: number) {
+    return this.examsService.remove(id);
   }
 }

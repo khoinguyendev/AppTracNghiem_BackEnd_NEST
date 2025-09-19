@@ -35,6 +35,8 @@ import { AnswersModule } from '@/answers/answers.module';
       database: 'test',
       entities: [User,Exam,Answer,Question],
       synchronize: true,
+      charset: 'utf8mb4',
+
     }),
 
   ],
